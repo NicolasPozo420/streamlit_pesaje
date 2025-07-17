@@ -1,3 +1,16 @@
 streamlit
 Pillow
 reportlab
+Image
+datetime
+base64
+random
+io
+time
+tempfile
+A4
+canvas
+pandas
+matplotlib
+altair
+ploty.express
