@@ -37,7 +37,7 @@ proveedores = {
 # Mostrar logo arriba solo si existe
 try:
     img = Image.open("logo.jpeg")
-    st.image(img, use_column_width=True)
+    st.image(img, use_container_width =True)
 except FileNotFoundError:
     pass
 
