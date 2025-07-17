@@ -2,7 +2,7 @@ streamlit
 pandas
 matplotlib
 altair
-plotly
 reportlab
 Pillow
-kaleido
+plotly>=5.5.0
+kaleido>=0.2.1
