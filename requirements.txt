@@ -5,3 +5,4 @@ altair
 plotly
 reportlab
 Pillow
+kaleido
