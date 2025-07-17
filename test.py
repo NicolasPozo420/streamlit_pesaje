@@ -355,58 +355,58 @@ def mostrar_contenido(opcion):
             # Botón para descargar PDF
             if st.button("📄 Descargar reporte con gráfico y tabla"):
                 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image as RLImage
-    from reportlab.lib.pagesizes import A4, landscape
-    from reportlab.lib import colors
-    from reportlab.lib.styles import getSampleStyleSheet
-    import io
+                from reportlab.lib.pagesizes import A4, landscape
+                from reportlab.lib import colors
+                from reportlab.lib.styles import getSampleStyleSheet
+                import io
 
-    # Guardar gráfico como imagen
-    fig_buffer = io.BytesIO()
-    fig.write_image(fig_buffer, format="png")
-    fig_buffer.seek(0)
+                # Guardar gráfico como imagen
+                fig_buffer = io.BytesIO()
+                fig.write_image(fig_buffer, format="png")
+                fig_buffer.seek(0)
 
-    buffer = io.BytesIO()
-    doc = SimpleDocTemplate(buffer, pagesize=landscape(A4))
-    elementos = []
-    estilos = getSampleStyleSheet()
-    elementos.append(Paragraph("📄 Reporte de tendencias", estilos['Heading1']))
-    elementos.append(Spacer(1, 12))
+                buffer = io.BytesIO()
+                doc = SimpleDocTemplate(buffer, pagesize=landscape(A4))
+                elementos = []
+                estilos = getSampleStyleSheet()
+                elementos.append(Paragraph("📄 Reporte de tendencias", estilos['Heading1']))
+                elementos.append(Spacer(1, 12))
 
-    # KPIs
-    elementos.append(Paragraph(f"Total de cajas: {total_cajas}", estilos['Normal']))
-    elementos.append(Paragraph(f"Peso total: {peso_total:.2f} kg", estilos['Normal']))
-    elementos.append(Paragraph(f"Peso promedio por caja: {peso_promedio:.2f} kg", estilos['Normal']))
-    elementos.append(Spacer(1, 12))
+                # KPIs
+                elementos.append(Paragraph(f"Total de cajas: {total_cajas}", estilos['Normal']))
+                elementos.append(Paragraph(f"Peso total: {peso_total:.2f} kg", estilos['Normal']))
+                elementos.append(Paragraph(f"Peso promedio por caja: {peso_promedio:.2f} kg", estilos['Normal']))
+                elementos.append(Spacer(1, 12))
 
-    # Imagen del gráfico
-    img_temp = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
-    img_temp.write(fig_buffer.getvalue())
-    img_temp.close()
-    elementos.append(RLImage(img_temp.name, width=500, height=250))
-    elementos.append(Spacer(1, 12))
+                # Imagen del gráfico
+                img_temp = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
+                img_temp.write(fig_buffer.getvalue())
+                img_temp.close()
+                elementos.append(RLImage(img_temp.name, width=500, height=250))
+                elementos.append(Spacer(1, 12))
 
-    # Tabla de datos
-    tabla_data = [df_filtrado.columns.tolist()] + df_filtrado.values.tolist()
-    tabla = Table(tabla_data)
-    tabla.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), colors.gray),
-        ('TEXTCOLOR',(0,0),(-1,0),colors.whitesmoke),
-        ('ALIGN',(0,0),(-1,-1),'CENTER'),
-        ('FONTNAME', (0,0),(-1,0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0,0),(-1,0), 12),
-        ('GRID', (0,0), (-1,-1), 0.5, colors.black)
-    ]))
-    elementos.append(tabla)
+                # Tabla de datos
+                tabla_data = [df_filtrado.columns.tolist()] + df_filtrado.values.tolist()
+                tabla = Table(tabla_data)
+                tabla.setStyle(TableStyle([
+                    ('BACKGROUND', (0,0), (-1,0), colors.gray),
+                    ('TEXTCOLOR',(0,0),(-1,0),colors.whitesmoke),
+                    ('ALIGN',(0,0),(-1,-1),'CENTER'),
+                    ('FONTNAME', (0,0),(-1,0), 'Helvetica-Bold'),
+                    ('BOTTOMPADDING', (0,0),(-1,0), 12),
+                    ('GRID', (0,0), (-1,-1), 0.5, colors.black)
+                ]))
+                elementos.append(tabla)
 
-    doc.build(elementos)
-    buffer.seek(0)
+                doc.build(elementos)
+                buffer.seek(0)
 
-    st.download_button(
-        label="⬇️ Descargar PDF",
-        data=buffer,
-        file_name="reporte_tendencias.pdf",
-        mime="application/pdf"
-    )
+                st.download_button(
+                    label="⬇️ Descargar PDF",
+                    data=buffer,
+                    file_name="reporte_tendencias.pdf",
+                    mime="application/pdf"
+                )
         else:
             st.info("No hay datos aún. Ingresa primero registros en la sección de Pesaje.")
     elif opcion == "Estado máquina":
