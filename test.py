@@ -47,15 +47,16 @@ def login():
         usuario = st.text_input("Usuario")
         contraseña = st.text_input("Contraseña", type="password")
         login_btn = st.form_submit_button("Iniciar sesión")
+    
     if login_btn:
         if usuario in usuarios and usuarios[usuario] == contraseña:
             st.session_state['logueado'] = True
             st.session_state['usuario'] = usuario
             st.success(f"Bienvenido, {usuario} 👋")
-            st.experimental_rerun()
+            # NO usar st.experimental_rerun() aquí
         else:
             st.error("❌ Usuario o contraseña incorrectos")
-
+            
 def animacion_caja(tipo):
     ruta_imagen_local = "./caja.png"
     try:
@@ -475,10 +476,10 @@ def main():
         st.session_state['logueado'] = False
         st.session_state['usuario'] = ""
 
-    if not st.session_state['logueado']:
-        login()
-    else:
+    if st.session_state['logueado']:
         contenido_principal()
+    else:
+        login()
 
 if __name__ == "__main__":
     main()
