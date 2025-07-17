@@ -352,33 +352,11 @@ def mostrar_contenido(opcion):
 
             # Botón para descargar PDF
             if st.button("📄 Descargar reporte con gráfico y tabla"):
+                from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
                 from reportlab.lib.pagesizes import A4, landscape
-                from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image as RLImage
                 from reportlab.lib import colors
                 from reportlab.lib.styles import getSampleStyleSheet
-                import tempfile
-                import matplotlib.pyplot as plt
-
-                # Crear figura del gráfico actual
-                fig_buffer = io.BytesIO()
-                if grafico_opcion == "Proveedor vs Peso por tipo de caja":
-                    px.bar(
-                        df_filtrado,
-                        x="Proveedor",
-                        y="Peso (kg)",
-                        color="Tipo",
-                        barmode="group"
-                    ).write_image(fig_buffer, format="png")
-                elif grafico_opcion == "Tendencia diaria por proveedor":
-                    df_agrupado = df_filtrado.groupby(["Fecha", "Proveedor"])["Peso (kg)"].sum().reset_index()
-                    px.bar(
-                        df_agrupado,
-                        x="Fecha",
-                        y="Peso (kg)",
-                        color="Proveedor",
-                        barmode="group"
-                    ).write_image(fig_buffer, format="png")
-                fig_buffer.seek(0)
+                import io
 
                 buffer = io.BytesIO()
                 doc = SimpleDocTemplate(buffer, pagesize=landscape(A4))
@@ -393,12 +371,7 @@ def mostrar_contenido(opcion):
                 elementos.append(Paragraph(f"Peso promedio por caja: {peso_promedio:.2f} kg", estilos['Normal']))
                 elementos.append(Spacer(1, 12))
 
-                # Imagen del gráfico
-                with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp:
-                    tmp.write(fig_buffer.read())
-                    elementos.append(RLImage(tmp.name, width=500, height=300))
-
-                elementos.append(Spacer(1, 24))
+                # NO imagen del gráfico para evitar error en Streamlit Cloud
 
                 # Tabla de datos
                 tabla_data = [df_filtrado.columns.tolist()] + df_filtrado.values.tolist()
