@@ -53,7 +53,7 @@ def login():
             st.session_state['logueado'] = True
             st.session_state['usuario'] = usuario
             st.success(f"Bienvenido, {usuario} 👋")
-            st.experimental_rerun()  # ✅ Esto fuerza la recarga con la sesión activa
+            st.rerun()  # ✅ Esto fuerza la recarga con la sesión activa
         else:
             st.error("❌ Usuario o contraseña incorrectos")
             
