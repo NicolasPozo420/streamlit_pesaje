@@ -419,11 +419,6 @@ def contenido_principal():
     st.title(f"📌 {opcion}")
     mostrar_contenido(opcion)
 
-
-import streamlit as st
-import random
-import time
-
 def estado_maquina():
     import random
     st.header("⚙️ Estado de la máquina")
