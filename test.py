@@ -17,7 +17,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import altair as alt
 import plotly.express as px
-import plotly.io as pio
 
 # Usuarios permitidos
 usuarios = {
@@ -354,16 +353,11 @@ def mostrar_contenido(opcion):
 
             # Botón para descargar PDF
             if st.button("📄 Descargar reporte con gráfico y tabla"):
-                from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image as RLImage
+                from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
                 from reportlab.lib.pagesizes import A4, landscape
                 from reportlab.lib import colors
                 from reportlab.lib.styles import getSampleStyleSheet
                 import io
-
-                # Guardar gráfico como imagen
-                fig_buffer = io.BytesIO()
-                fig.write_image(fig_buffer, format="png")
-                fig_buffer.seek(0)
 
                 buffer = io.BytesIO()
                 doc = SimpleDocTemplate(buffer, pagesize=landscape(A4))
@@ -378,12 +372,7 @@ def mostrar_contenido(opcion):
                 elementos.append(Paragraph(f"Peso promedio por caja: {peso_promedio:.2f} kg", estilos['Normal']))
                 elementos.append(Spacer(1, 12))
 
-                # Imagen del gráfico
-                img_temp = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
-                img_temp.write(fig_buffer.getvalue())
-                img_temp.close()
-                elementos.append(RLImage(img_temp.name, width=500, height=250))
-                elementos.append(Spacer(1, 12))
+                # NO imagen del gráfico para evitar error en Streamlit Cloud
 
                 # Tabla de datos
                 tabla_data = [df_filtrado.columns.tolist()] + df_filtrado.values.tolist()
@@ -421,7 +410,7 @@ def contenido_principal():
         ["Pesaje", "Consulta despachos", "Tendencias", "Estado máquina"]
     )
     st.sidebar.markdown("---")
-    st.sidebar.write(f"👤 Usuario: `{st.session_state.get('usuario','')}`")
+    st.sidebar.write(f"👤 Usuario: {st.session_state.get('usuario','')}")
     if st.sidebar.button("Cerrar sesión"):
         st.session_state['logueado'] = False
         st.session_state['usuario'] = ""
